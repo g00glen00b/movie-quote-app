@@ -1,0 +1,30 @@
+{
+  "name": "movie-quote-consumer",
+  "version": "0.0.1",
+  "author": {
+    "name": "g00glen00b"
+  },
+  "private": true,
+  "scripts": {
+    "start": "webpack-dev-server --open --mode development --port 8081 --env.API_URL=http://localhost:8080/api",
+    "build": "webpack --mode production --env.API_URL=./movie-quote-service/api",
+    "docker": "docker build -t $npm_package_author_name/$npm_package_name:$npm_package_version ."
+  },
+  "dependencies": {
+    "axios": "^0.18.0",
+    "rxjs": "^6.3.3"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.2.2",
+    "@babel/preset-env": "^7.3.1",
+    "@babel/register": "^7.0.0",
+    "babel-loader": "^8.0.5",
+    "css-loader": "^2.1.0",
+    "html-webpack-plugin": "^3.2.0",
+    "style-loader": "^0.23.1",
+    "webpack": "^4.29.0",
+    "webpack-cli": "^3.2.1",
+    "webpack-dev-server": "^3.1.14"
+  }
+}

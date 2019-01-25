@@ -5,6 +5,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.Arrays;
 
@@ -24,12 +26,24 @@ public class MovieQuoteServiceApplication {
 				new MovieQuote(null, "We'll always have Paris", "Casablanca"),
 				new MovieQuote(null, "Houston, we have a problem", "Apollo 13"),
 				new MovieQuote(null, "Here's Johnny!", "The Shining"),
-				new MovieQuote(null, "My previous", "The Lord of the Rings"),
+				new MovieQuote(null, "My precious", "The Lord of the Rings"),
 				new MovieQuote(null, "Why so serious?", "The Dark Knight"),
 				new MovieQuote(null, "I solemnly swear that I am up to no good", "Harry Potter"),
 				new MovieQuote(null, "This is Sparta!", "300"),
-				new MovieQuote(null, "With great power comes great responsiblity", "Spider-Man")
+				new MovieQuote(null, "With great power comes great responsiblity", "Spider-Man"),
+				new MovieQuote(null, "Human beings are a disease, cancer of this planet.", "Matrix"),
+				new MovieQuote(null, "Beneath this mask there is an idea. And ideas are bulletproof.", "V for Vendetta")
 			));
+		};
+	}
+
+	@Bean
+	public WebMvcConfigurer corsConfigurer() {
+		return new WebMvcConfigurer() {
+			@Override
+			public void addCorsMappings(CorsRegistry registry) {
+				registry.addMapping("/api/**").allowedOrigins("http://localhost:8081");
+			}
 		};
 	}
 

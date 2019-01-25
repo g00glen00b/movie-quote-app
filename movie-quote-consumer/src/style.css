@@ -1,0 +1,14 @@
+blockquote {
+    margin-top: 20%;
+    font-family: 'Roboto', sans-serif;
+    transition: opacity .5s;
+}
+
+blockquote.hidden {
+    opacity: 0;
+}
+
+blockquote > p {
+    margin: 0;
+    font-size: 3em;
+}

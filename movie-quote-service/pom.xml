@@ -93,7 +93,7 @@
 							<goal>build</goal>
 						</goals>
 						<configuration>
-							<repository>g00glen00b/${project.artifactId}</repository>
+							<repository>g00glen00b/${project.artifactId}:${project.version}</repository>
 						</configuration>
 					</execution>
 				</executions>
