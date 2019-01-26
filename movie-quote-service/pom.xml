@@ -99,15 +99,6 @@
 						</goals>
 						<configuration>
 							<repository>g00glen00b/${project.artifactId}</repository>
-						</configuration>
-					</execution>
-					<execution>
-						<id>tag</id>
-						<phase>package</phase>
-						<goals>
-							<goal>tag</goal>
-						</goals>
-						<configuration>
 							<tag>${project.version}</tag>
 						</configuration>
 					</execution>
