@@ -10,7 +10,7 @@ services:
         aliases:
           - movie-quote-consumer
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./config/nginx.conf:/etc/nginx/nginx.conf
   movie-quote-service:
     image: g00glen00b/movie-quote-service:0.0.1
     ports:
@@ -40,7 +40,7 @@ services:
     ports:
       - 9090:9090
     volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
       - ./prometheus:/prometheus
     networks:
       monitoring:

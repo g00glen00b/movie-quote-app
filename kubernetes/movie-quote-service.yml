@@ -1,9 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: movie-quote-api
+  name: movie-quote-service
   labels:
     app: movie-quote-app
+    tier: backend
 spec:
   ports:
     - name: http
@@ -17,7 +18,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: movie-quote-api
+  name: movie-quote-service
   labels:
     app: movie-quote-app
 spec:
@@ -25,14 +26,21 @@ spec:
   selector:
     matchLabels:
       app: movie-quote-app
+      tier: backend
   template:
     metadata:
       labels:
         app: movie-quote-app
+        tier: backend
     spec:
       containers:
-        - name: movie-quote-api
+        - name: movie-quote-service
           image: g00glen00b/movie-quote-service:0.0.1
+          env:
+            - name: MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE
+              value: "health,info,metrics,prometheus"
+            - name: MANAGEMENT_ENDPOINTS_HEALTH_SHOW-DETAILS
+              value: "always"
           ports:
             - containerPort: 8080
           resources:
