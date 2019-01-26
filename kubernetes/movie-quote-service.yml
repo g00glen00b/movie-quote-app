@@ -14,6 +14,7 @@ spec:
   type: NodePort
   selector:
     app: movie-quote-app
+    tier: backend
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -21,8 +22,8 @@ metadata:
   name: movie-quote-service
   labels:
     app: movie-quote-app
+    tier: backend
 spec:
-  replicas: 1
   selector:
     matchLabels:
       app: movie-quote-app
