@@ -9,6 +9,6 @@ cd ..
 
 # Create image of backend
 cd ./movie-quote-service/
-./mvnw clean package dockerfile:build
+./mvnw clean package
 cd ..
 

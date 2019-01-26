@@ -40,3 +40,7 @@ spec:
           image: g00glen00b/movie-quote-consumer:0.0.1
           ports:
             - containerPort: 80
+      volumes:
+        - name: nginx-config
+          configMap:
+            name: nginx-config

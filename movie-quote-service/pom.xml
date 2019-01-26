@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>be.g00glen00b.apps</groupId>
 	<artifactId>movie-quote-service</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<name>movie-quote-service</name>
 	<description>Webservice providing movie quotes</description>
 
@@ -98,7 +98,17 @@
 							<goal>build</goal>
 						</goals>
 						<configuration>
-							<repository>g00glen00b/${project.artifactId}:${project.version}</repository>
+							<repository>g00glen00b/${project.artifactId}</repository>
+						</configuration>
+					</execution>
+					<execution>
+						<id>tag</id>
+						<phase>package</phase>
+						<goals>
+							<goal>tag</goal>
+						</goals>
+						<configuration>
+							<tag>${project.version}</tag>
 						</configuration>
 					</execution>
 				</executions>
