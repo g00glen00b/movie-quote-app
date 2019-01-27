@@ -11,6 +11,10 @@ spec:
       protocol: TCP
       port: 80
       targetPort: 80
+    - name: prometheus
+      protocol: TCP
+      port: 9113
+      targetPort: 9113
   type: NodePort
   selector:
     app: movie-quote-app
@@ -43,8 +47,44 @@ spec:
             - mountPath: /etc/nginx/nginx.conf
               name: nginx-config
               subPath: nginx.conf
+          readinessProbe:
+            httpGet:
+              port: 80
+              path: /health
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              port: 80
+              path: /health
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 2
+        - name: movie-quote-consumer-prometheus
+          image: nginx/nginx-prometheus-exporter:0.2.0
+          ports:
+            - containerPort: 9113
+          env:
+            - name: SCRAPE_URI
+              value: http://localhost/metrics
+            - name: TELEMETRY_PATH
+              value: /prometheus
+          readinessProbe:
+            httpGet:
+              port: 9113
+              path: /prometheus
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              port: 9113
+              path: /prometheus
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 2
       volumes:
         - name: nginx-config
           configMap:
             name: nginx-config
+
 
