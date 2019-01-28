@@ -45,6 +45,7 @@ spec:
               value: "always"
           ports:
             - containerPort: 8080
+              name: service-port
           resources:
             requests:
               memory: "128Mi"
@@ -54,14 +55,13 @@ spec:
               cpu: "1000m"
           readinessProbe:
             httpGet:
-              port: 8080
+              port: service-port
               path: /actuator/health
             initialDelaySeconds: 10
-            periodSeconds: 5
+            timeoutSeconds: 2
           livenessProbe:
             httpGet:
-              port: 8080
+              port: service-port
               path: /actuator/health
             initialDelaySeconds: 10
-            periodSeconds: 5
             timeoutSeconds: 2

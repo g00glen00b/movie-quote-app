@@ -43,27 +43,28 @@ spec:
           image: g00glen00b/movie-quote-consumer:0.0.1
           ports:
             - containerPort: 80
+              name: nginx-port
           volumeMounts:
             - mountPath: /etc/nginx/nginx.conf
               name: nginx-config
               subPath: nginx.conf
           readinessProbe:
             httpGet:
-              port: 80
+              port: nginx-port
               path: /health
             initialDelaySeconds: 10
-            periodSeconds: 5
+            timeoutSeconds: 2
           livenessProbe:
             httpGet:
-              port: 80
+              port: nginx-port
               path: /health
             initialDelaySeconds: 10
-            periodSeconds: 5
             timeoutSeconds: 2
         - name: movie-quote-consumer-prometheus
           image: nginx/nginx-prometheus-exporter:0.2.0
           ports:
             - containerPort: 9113
+              name: exporter-port
           env:
             - name: SCRAPE_URI
               value: http://localhost/metrics
@@ -71,16 +72,15 @@ spec:
               value: /prometheus
           readinessProbe:
             httpGet:
-              port: 9113
+              port: exporter-port
               path: /prometheus
             initialDelaySeconds: 10
-            periodSeconds: 5
+            timeoutSeconds: 2
           livenessProbe:
             httpGet:
-              port: 9113
+              port: exporter-port
               path: /prometheus
             initialDelaySeconds: 10
-            periodSeconds: 5
             timeoutSeconds: 2
       volumes:
         - name: nginx-config

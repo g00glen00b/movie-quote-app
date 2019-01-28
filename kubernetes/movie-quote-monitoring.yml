@@ -51,6 +51,7 @@ spec:
           image: prom/prometheus:v2.6.1
           ports:
             - containerPort: 9090
+              name: prometheus-port
           volumeMounts:
             - mountPath: /etc/prometheus/prometheus.yml
               name: prometheus-config
@@ -59,21 +60,20 @@ spec:
               name: prometheus-storage
           readinessProbe:
             httpGet:
-              port: 9090
+              port: prometheus-port
               path: /-/healthy
             initialDelaySeconds: 10
-            periodSeconds: 5
           livenessProbe:
             httpGet:
-              port: 9090
+              port: prometheus-port
               path: /-/healthy
             initialDelaySeconds: 10
-            periodSeconds: 5
             timeoutSeconds: 2
         - name: grafana
           image: grafana/grafana:5.4.3
           ports:
             - containerPort: 3000
+              name: grafana-port
           volumeMounts:
             - mountPath: /var/lib/grafana
               name: grafana-storage
@@ -88,6 +88,17 @@ spec:
                 secretKeyRef:
                   name: grafana-login
                   key: password
+          readinessProbe:
+            httpGet:
+              port: grafana-port
+              path: /-/healthy
+            initialDelaySeconds: 10
+          livenessProbe:
+            httpGet:
+              port: grafana-port
+              path: /-/healthy
+            initialDelaySeconds: 10
+            timeoutSeconds: 2
       volumes:
         - name: prometheus-config
           configMap:
