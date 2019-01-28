@@ -53,7 +53,7 @@ spec:
             - name: MANAGEMENT_ENDPOINTS_HEALTH_SHOW-DETAILS
               value: "always"
             - name: SPRING_DATASOURCE_URL
-              value: jdbc:mysql://localhost:3306/quotes?useSSL=false
+              value: "jdbc:mysql://localhost:3306/quotes?useSSL=false&allowPublicKeyRetrieval=true"
             - name: SPRING_DATASOURCE_USERNAME
               valueFrom:
                 secretKeyRef:
@@ -73,17 +73,15 @@ spec:
               name: service-port
           resources:
             requests:
-              memory: "64Mi"
-              cpu: "250m"
-            limits:
               memory: "128Mi"
-              cpu: "1000m"
+            limits:
+              memory: "256Mi"
           readinessProbe:
             httpGet:
               port: service-port
               path: /actuator/health
-            initialDelaySeconds: 10
-            timeoutSeconds: 2
+            initialDelaySeconds: 30
+            timeoutSeconds: 5
           livenessProbe:
             httpGet:
               port: service-port
@@ -94,24 +92,24 @@ spec:
           image: mysql:8.0.14
           env:
             - name: MYSQL_ONETIME_PASSWORD
-              value: true
+              value: "true"
             - name: MYSQL_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: mysql-login
                   key: rootPassword
+                  name: mysql-login
             - name: MYSQL_USER
               valueFrom:
                 secretKeyRef:
-                  name: mysql-login
                   key: username
+                  name: mysql-login
             - name: MYSQL_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: mysql-login
                   key: password
+                  name: mysql-login
             - name: MYSQL_DATABASE
-              value: quotes
+              value: "quotes"
           ports:
             - containerPort: 3306
               name: mysql-port
@@ -120,16 +118,17 @@ spec:
               name: movie-quote-storage
           resources:
             requests:
-              cpu: 500m
-              memory: 1Gi
+              memory: "1Gi"
+            limits:
+              memory: "1Gi"
           livenessProbe:
             exec:
-              command: ["mysqladmin", "ping"]
+              command: ["/bin/sh", "-ec", ">-", "mysql -h127.0.0.1 -u$MYSQL_USER -p$MYSQL_PASSWORD -e'SELECT 1'"]
             initialDelaySeconds: 30
             timeoutSeconds: 5
           readinessProbe:
             exec:
-              command: ["mysql", "-h", "127.0.0.1", "-e", "SELECT 1"]
+              command: ["/bin/sh", "-ec", ">-", "mysql -h127.0.0.1 -u$MYSQL_USER -p$MYSQL_PASSWORD -e'SELECT 1'"]
             initialDelaySeconds: 10
             timeoutSeconds: 2
       volumes:

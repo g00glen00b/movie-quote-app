@@ -91,12 +91,12 @@ spec:
           readinessProbe:
             httpGet:
               port: grafana-port
-              path: /-/healthy
+              path: /login
             initialDelaySeconds: 10
           livenessProbe:
             httpGet:
               port: grafana-port
-              path: /-/healthy
+              path: /login
             initialDelaySeconds: 10
             timeoutSeconds: 2
       volumes:
