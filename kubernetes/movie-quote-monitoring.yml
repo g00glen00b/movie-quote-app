@@ -1,0 +1,99 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: movie-quote-monitoring
+  labels:
+    app: movie-quote-app
+    tier: monitoring
+spec:
+  ports:
+    - name: grafana
+      protocol: TCP
+      port: 3000
+      targetPort: 3000
+    - name: prometheus
+      protocol: TCP
+      port: 9090
+      targetPort: 9090
+  type: NodePort
+  selector:
+    app: movie-quote-app
+    tier: monitoring
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: grafana-login
+data:
+  username: YWRtaW4=
+  password: YWRtaW4=
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: movie-quote-monitoring
+  labels:
+    app: movie-quote-app
+    tier: monitoring
+spec:
+  selector:
+    matchLabels:
+      app: movie-quote-app
+      tier: monitoring
+  template:
+    metadata:
+      labels:
+        app: movie-quote-app
+        tier: monitoring
+    spec:
+      containers:
+        - name: prometheus
+          image: prom/prometheus:v2.6.1
+          ports:
+            - containerPort: 9090
+          volumeMounts:
+            - mountPath: /etc/prometheus/prometheus.yml
+              name: prometheus-config
+              subPath: prometheus.yml
+            - mountPath: /prometheus
+              name: prometheus-storage
+          readinessProbe:
+            httpGet:
+              port: 9090
+              path: /-/healthy
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              port: 9090
+              path: /-/healthy
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 2
+        - name: grafana
+          image: grafana/grafana:5.4.3
+          ports:
+            - containerPort: 3000
+          volumeMounts:
+            - mountPath: /var/lib/grafana
+              name: grafana-storage
+          env:
+            - name: GF_SECURITY_ADMIN_USER
+              valueFrom:
+                secretKeyRef:
+                  name: grafana-login
+                  key: username
+            - name: GF_SECURITY_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: grafana-login
+                  key: password
+      volumes:
+        - name: prometheus-config
+          configMap:
+            name: prometheus-config
+        - name: prometheus-storage
+          emptyDir: {}
+        - name: grafana-storage
+          emptyDir: {}
+

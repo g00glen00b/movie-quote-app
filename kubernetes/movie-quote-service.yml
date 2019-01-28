@@ -37,6 +37,7 @@ spec:
       containers:
         - name: movie-quote-service
           image: g00glen00b/movie-quote-service:0.0.1
+          imagePullPolicy: "Always"
           env:
             - name: MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE
               value: "health,info,metrics,prometheus"
