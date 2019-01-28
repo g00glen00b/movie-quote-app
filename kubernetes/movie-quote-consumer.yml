@@ -44,6 +44,13 @@ spec:
           ports:
             - containerPort: 80
               name: nginx-port
+          resources:
+            requests:
+              memory: "32Mi"
+              cpu: "250m"
+            limits:
+              memory: "64Mi"
+              cpu: "500m"
           volumeMounts:
             - mountPath: /etc/nginx/nginx.conf
               name: nginx-config
@@ -70,6 +77,13 @@ spec:
               value: http://localhost/metrics
             - name: TELEMETRY_PATH
               value: /prometheus
+          resources:
+            requests:
+              memory: "32Mi"
+              cpu: "250m"
+            limits:
+              memory: "64Mi"
+              cpu: "500m"
           readinessProbe:
             httpGet:
               port: exporter-port

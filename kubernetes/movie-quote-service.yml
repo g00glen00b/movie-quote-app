@@ -16,6 +16,15 @@ spec:
     app: movie-quote-app
     tier: backend
 ---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysql-login
+data:
+  rootPassword: UEAkJHcwcmQ=
+  username: ZGJ1c2Vy
+  password: ZGJwYXNz
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -43,15 +52,31 @@ spec:
               value: "health,info,metrics,prometheus"
             - name: MANAGEMENT_ENDPOINTS_HEALTH_SHOW-DETAILS
               value: "always"
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:mysql://localhost:3600/quotes?useSSL=false
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-login
+                  key: username
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-login
+                  key: password
+            - name: SPRING_DATASOURCE_SCHEMA
+              value: "classpath:schema-mysql.sql"
+            - name: SPRING_DATASOURCE_INITIALIZATION-MODE
+              value: "always"
           ports:
             - containerPort: 8080
               name: service-port
           resources:
             requests:
-              memory: "128Mi"
+              memory: "64Mi"
               cpu: "250m"
             limits:
-              memory: "256Mi"
+              memory: "128Mi"
               cpu: "1000m"
           readinessProbe:
             httpGet:
@@ -65,3 +90,26 @@ spec:
               path: /actuator/health
             initialDelaySeconds: 10
             timeoutSeconds: 2
+        - name: movie-quote-database
+          image: mysql:8.0.14
+          env:
+            - name: MYSQL_ONETIME_PASSWORD
+              value: true
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-login
+                  key: rootPassword
+            - name: MYSQL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-login
+                  key: username
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-login
+                  key: password
+            - name: MYSQL_DATABASE
+              value: quotes
+
