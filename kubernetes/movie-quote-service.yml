@@ -53,7 +53,7 @@ spec:
             - name: MANAGEMENT_ENDPOINTS_HEALTH_SHOW-DETAILS
               value: "always"
             - name: SPRING_DATASOURCE_URL
-              value: jdbc:mysql://localhost:3600/quotes?useSSL=false
+              value: jdbc:mysql://localhost:3306/quotes?useSSL=false
             - name: SPRING_DATASOURCE_USERNAME
               valueFrom:
                 secretKeyRef:
@@ -112,4 +112,27 @@ spec:
                   key: password
             - name: MYSQL_DATABASE
               value: quotes
+          ports:
+            - containerPort: 3306
+              name: mysql-port
+          volumeMounts:
+            - mountPath: /var/lib/mysql/
+              name: movie-quote-storage
+          resources:
+            requests:
+              cpu: 500m
+              memory: 1Gi
+          livenessProbe:
+            exec:
+              command: ["mysqladmin", "ping"]
+            initialDelaySeconds: 30
+            timeoutSeconds: 5
+          readinessProbe:
+            exec:
+              command: ["mysql", "-h", "127.0.0.1", "-e", "SELECT 1"]
+            initialDelaySeconds: 10
+            timeoutSeconds: 2
+      volumes:
+        - name: movie-quote-storage
+          emptyDir: {}
 
