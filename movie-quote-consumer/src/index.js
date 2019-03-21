@@ -19,8 +19,8 @@ function randomQuote() {
   return get(`${API_URL}/movie-quote/@random`);
 }
 
-function displayQuote({quote, source}) {
+function displayQuote({quote, movie: {name}}) {
   document.querySelector('blockquote').classList.remove('hidden');
   document.querySelector('blockquote p').innerText = `“${quote}„`;
-  document.querySelector('blockquote footer').innerText = source;
+  document.querySelector('blockquote footer').innerText = name;
 }

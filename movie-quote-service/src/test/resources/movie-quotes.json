@@ -1,0 +1,15 @@
+[{
+  "id": 1,
+  "quote": "Hasta la vista, baby",
+  "movie": {
+    "id": 1,
+    "name": "Terminator"
+  }
+}, {
+  "id": 2,
+  "quote": "I'll be back",
+  "movie": {
+    "id": 1,
+    "name": "Terminator"
+  }
+}]

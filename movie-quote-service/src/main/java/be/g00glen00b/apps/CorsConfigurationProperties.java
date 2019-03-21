@@ -8,6 +8,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Setter
 @ConfigurationProperties(prefix = "cors")
 public class CorsConfigurationProperties {
+    /**
+     * List of allowed origins for cross origin requests
+     */
     private String[] allowedOrigins = new String[]{};
 
 }
