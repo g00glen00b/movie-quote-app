@@ -12,6 +12,6 @@ public class MovieQuoteNotFoundException extends RuntimeException {
 
     @Override
     public String getMessage() {
-        return format("Quote with id '{0}' was not found", id);
+        return format("Quote with id ''{0}'' was not found", id);
     }
 }

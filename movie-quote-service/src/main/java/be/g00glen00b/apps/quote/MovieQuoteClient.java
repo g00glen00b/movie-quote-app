@@ -1,7 +1,6 @@
 package be.g00glen00b.apps.quote;
 
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
@@ -9,7 +8,6 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
-@Slf4j
 @Component
 @AllArgsConstructor
 public class MovieQuoteClient {

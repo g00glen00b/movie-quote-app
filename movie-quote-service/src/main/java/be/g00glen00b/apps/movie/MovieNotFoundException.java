@@ -10,6 +10,6 @@ public class MovieNotFoundException extends RuntimeException {
 
     @Override
     public String getMessage() {
-        return format("Movie with name '{0}' was not found", name);
+        return format("Movie with name ''{0}'' was not found", name);
     }
 }

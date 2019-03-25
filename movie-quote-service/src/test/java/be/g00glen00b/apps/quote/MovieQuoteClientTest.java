@@ -33,8 +33,6 @@ public class MovieQuoteClientTest {
     @Autowired
     private MockRestServiceServer server;
 
-
-
     @Test
     public void findAll_callsGetMovieQuotes() {
         server

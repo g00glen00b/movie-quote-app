@@ -11,6 +11,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasSize;
@@ -21,6 +22,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -85,5 +87,14 @@ public class MovieQuoteControllerTest {
         verify(service).create(anyQuote.capture());
         assertThat(anyQuote.getValue().getMovie()).isEqualTo("Terminator");
         assertThat(anyQuote.getValue().getQuote()).isEqualTo("Hasta la vista, baby");
+    }
+
+    @Test
+    public void getMovieQuoteById_shouldReturn404IfNoQuoteExists() throws Exception {
+        when(service.findById(1L)).thenThrow(new MovieQuoteNotFoundException(1L));
+        this.mockMvc
+            .perform(get("/api/movie-quote/1"))
+            .andExpect(status().isNotFound())
+            .andExpect(content().string("Quote with id '1' was not found"));
     }
 }
