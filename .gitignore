@@ -1,6 +1,6 @@
-/.idea/
 /grafana/
 /prometheus/
 target/
+.idea/
 node_modules/
 *.iml
