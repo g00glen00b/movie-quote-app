@@ -28,7 +28,7 @@
         --set gateways.istio-egressgateway.type=NodePort \
         --set servicegraph.enabled=true > kubernetes/istio.yaml
     kubectl create namespace istio-system
-    kubectl apply -f kubernetes/istio.yaml
+    kubectl apply -f kubernetes/istio.yml
     ```
     
     
