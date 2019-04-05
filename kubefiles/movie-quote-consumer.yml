@@ -8,13 +8,11 @@ metadata:
 spec:
   ports:
     - name: http
-      protocol: TCP
+      nodePort: 30800
       port: 80
-      targetPort: 80
     - name: prometheus
-      protocol: TCP
+      nodePort: 30113
       port: 9113
-      targetPort: 9113
   type: NodePort
   selector:
     app: movie-quote-app
@@ -40,7 +38,7 @@ spec:
     spec:
       containers:
         - name: movie-quote-consumer
-          image: g00glen00b/movie-quote-consumer:0.0.1
+          image: g00glen00b/movie-quote-consumer:0.0.2
           ports:
             - containerPort: 80
               name: nginx-port
@@ -72,9 +70,11 @@ spec:
               name: exporter-port
           env:
             - name: SCRAPE_URI
-              value: http://localhost/metrics
+              value: "http://localhost/metrics"
             - name: TELEMETRY_PATH
-              value: /prometheus
+              value: "/prometheus"
+            - name: NGINX_RETRIES
+              value: "10"
           resources:
             requests:
               memory: "32Mi"

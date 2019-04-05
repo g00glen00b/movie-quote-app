@@ -21,14 +21,19 @@
 
     ```bash
     brew install kubernetes-helm
+    kubectl create namespace istio-system
+    helm template $ISTIO_RELEASE/install/kubernetes/helm/istio-init \
+        --name istio-init \
+        --namespace istio-system > kubefiles/istio-init.yml
     helm template $ISTIO_RELEASE/install/kubernetes/helm/istio/ \
         --name istio \
         --namespace istio-system \
         --set gateways.istio-ingressgateway.type=NodePort \
         --set gateways.istio-egressgateway.type=NodePort \
-        --set servicegraph.enabled=true > kubernetes/istio.yaml
-    kubectl create namespace istio-system
-    kubectl apply -f kubernetes/istio.yml
+        --set mixer.telemetry.enabled=false \
+        --set kiali.enabled=true > kubefiles/istio.yml
+    kubectl apply -f kubefiles/istio-init.yml
+    kubectl apply -f kubefiles/istio.yml
     ```
     
     

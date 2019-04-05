@@ -8,9 +8,8 @@ metadata:
 spec:
   ports:
     - name: http
-      protocol: TCP
+      nodePort: 30080
       port: 8080
-      targetPort: 8080
   type: NodePort
   selector:
     app: movie-quote-app
@@ -21,7 +20,7 @@ kind: Secret
 metadata:
   name: mysql-login
 data:
-  rootPassword: UEAkJHcwcmQ=
+  rootPassword: UEAkJHcwcmQK
   username: ZGJ1c2Vy
   password: ZGJwYXNz
 ---
@@ -45,13 +44,9 @@ spec:
     spec:
       containers:
         - name: movie-quote-service
-          image: g00glen00b/movie-quote-service:0.0.1
+          image: g00glen00b/movie-quote-service:0.0.2
           imagePullPolicy: "Always"
           env:
-            - name: MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE
-              value: "health,info,metrics,prometheus"
-            - name: MANAGEMENT_ENDPOINTS_HEALTH_SHOW-DETAILS
-              value: "always"
             - name: SPRING_DATASOURCE_URL
               value: "jdbc:mysql://localhost:3306/quotes?useSSL=false&allowPublicKeyRetrieval=true"
             - name: SPRING_DATASOURCE_USERNAME
@@ -80,14 +75,14 @@ spec:
             httpGet:
               port: service-port
               path: /actuator/health
-            initialDelaySeconds: 30
+            initialDelaySeconds: 20
             timeoutSeconds: 5
           livenessProbe:
             httpGet:
               port: service-port
               path: /actuator/health
-            initialDelaySeconds: 10
-            timeoutSeconds: 2
+            initialDelaySeconds: 30
+            timeoutSeconds: 10
         - name: movie-quote-database
           image: mysql:8.0.14
           env:
