@@ -53,7 +53,7 @@ services:
     ports:
       - 9090:9090
     volumes:
-      - ./config/prometheus2.yml:/etc/prometheus/prometheus.yml
+      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
       - ./prometheus:/prometheus
     networks:
       monitoring:

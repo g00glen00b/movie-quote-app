@@ -5,11 +5,16 @@ metadata:
   labels:
     app: movie-quote-app
     tier: backend
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/path: "/actuator/prometheus"
+    prometheus.io/port: "8080"
 spec:
   ports:
     - name: http
       nodePort: 30080
       port: 8080
+      targetPort: 8080
   type: NodePort
   selector:
     app: movie-quote-app
@@ -27,18 +32,21 @@ data:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: movie-quote-service
+  name: movie-quote-service-deployment
   labels:
+    service: movie-quote-service
     app: movie-quote-app
     tier: backend
 spec:
   selector:
     matchLabels:
+      service: movie-quote-service
       app: movie-quote-app
       tier: backend
   template:
     metadata:
       labels:
+        service: movie-quote-service
         app: movie-quote-app
         tier: backend
     spec:
@@ -47,6 +55,8 @@ spec:
           image: g00glen00b/movie-quote-service:0.0.2
           imagePullPolicy: "Always"
           env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "dev"
             - name: SPRING_DATASOURCE_URL
               value: "jdbc:mysql://localhost:3306/quotes?useSSL=false&allowPublicKeyRetrieval=true"
             - name: SPRING_DATASOURCE_USERNAME

@@ -30,10 +30,13 @@
         --namespace istio-system \
         --set gateways.istio-ingressgateway.type=NodePort \
         --set gateways.istio-egressgateway.type=NodePort \
-        --set mixer.telemetry.enabled=false \
+        --set mixer.telemetry.enabled=true \
+        --set grafana.enabled=true \
         --set kiali.enabled=true > kubefiles/istio.yml
+    kubectl apply -f kubefiles/kiali-secret.yml
     kubectl apply -f kubefiles/istio-init.yml
     kubectl apply -f kubefiles/istio.yml
+ 
     ```
     
     

@@ -10,9 +10,11 @@ spec:
     - name: http
       nodePort: 30800
       port: 80
+      targetPort: 80
     - name: prometheus
       nodePort: 30113
       port: 9113
+      targetPort: 9113
   type: NodePort
   selector:
     app: movie-quote-app
@@ -21,20 +23,26 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: movie-quote-consumer
+  name: movie-quote-consumer-deployment
   labels:
+    service: movie-quote-consumer
     app: movie-quote-app
     tier: frontend
 spec:
   selector:
     matchLabels:
+      service: movie-quote-consumer
       app: movie-quote-app
       tier: frontend
   template:
     metadata:
       labels:
+        service: movie-quote-consumer
         app: movie-quote-app
         tier: frontend
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9113"
     spec:
       containers:
         - name: movie-quote-consumer
