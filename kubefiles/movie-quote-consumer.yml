@@ -5,6 +5,10 @@ metadata:
   labels:
     app: movie-quote-app
     tier: frontend
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/path: "/prometheus"
+    prometheus.io/port: "9113"
 spec:
   ports:
     - name: http
@@ -40,9 +44,6 @@ spec:
         service: movie-quote-consumer
         app: movie-quote-app
         tier: frontend
-      annotations:
-        prometheus.io/scrape: "true"
-        prometheus.io/port: "9113"
     spec:
       containers:
         - name: movie-quote-consumer
